@@ -146,7 +146,9 @@ void search(Task* head)
         break;
     }
 }
+void display() {
 
+}
 int main() {
     Task* head = nullptr;
     Task* tail = nullptr;
