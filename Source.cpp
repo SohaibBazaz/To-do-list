@@ -2,171 +2,250 @@
 #include <string>
 using namespace std;
 
+// Structure for Task Nodes
 struct Task {
     int id;
     string name;
     string description;
-    int priority; //1 (high), 2(medium), 3(low)
-    int dueDate; //in (YYMMDD)
-    Task* prev;
+    int priority;
     Task* next;
-
-    Task(int id, string name, string description, int priority, int dueDate) {
-        this->id = id;
-        this->name = name;
-        this->description = description;
-        this->priority = priority;
-        this->dueDate = dueDate;
-        this->prev = nullptr;
-        this->next = nullptr;
-    }
+    Task* prev;
 };
 
-void addTask(Task*& head, Task*& tail, int id, string name, string description, int priority, int dueDate) {
-    Task* newTask = new Task(id, name, description, priority, dueDate);
-    if (head == nullptr)
+// Head and Tail pointers for the Task Linked List
+Task* head = nullptr;
+Task* tail = nullptr;
+
+// Stack for Undo Feature
+struct StackNode {
+    Task taskData;
+    StackNode* next;
+};
+
+StackNode* stackTop = nullptr; // Top of the Stack
+
+// Function to Add Task to Linked List
+void addTask(int id, string name, string description, int priority) {
+    Task* newTask = new Task{ id, name, description, priority, nullptr, nullptr };
+
+    // If list is empty
+    if (!head) {
         head = tail = newTask;
-    else {
-        Task* current = head;
-        while (current != nullptr && current->priority < priority) {
-            current = current->next;
-        }
-        if (current == nullptr) {
-            tail->next = newTask;
-            newTask->prev = tail;
-            tail = newTask;
-        }
-        else if (current == head) {
-            newTask->next = head;
-            head->prev = newTask;
-            head = newTask;
-        }
-        else {
-            newTask->next = current;
-            newTask->prev = current->prev; // Set the previous node for the new task
-            current->prev->next = newTask; // Update the next pointer of the previous node
-            current->prev = newTask;       // Update the previous pointer of the current node
-        }
+        return;
     }
+
+    // Append at the end
+    tail->next = newTask;
+    newTask->prev = tail;
+    tail = newTask;
 }
 
-void search(Task* head)
-{
-    int choice;
-    cout << "Search by:\n  1. Due Date\n  2. Task Priority\n  3. Task ID" << endl;
-    cout << "Enter your choice: ";
-    cin >> choice;
+// Function to Sort Linked List by Priority
+void sortTasks() {
+    if (!head || !head->next) return; // List is empty or has one node
 
-    switch (choice)
-    {
-    case 1:
-    {
-        int dueDate;
-        cout << "Enter Due Date (YYMMDD): ";
-        cin >> dueDate;
-        Task* current = head;
-        while (current != nullptr)
-        {
-            if (current->dueDate == dueDate)
-            {
-                cout << "Task Found:" << endl;
-                cout << "ID: " << current->id << endl;
-                cout << "Name: " << current->name << endl;
-                cout << "Description: " << current->description << endl;
-                cout << "Priority: " << current->priority << endl;
-                cout << "Due Date: " << current->dueDate << endl;
-                return;
-            }
-            current = current->next;
-        }
-        cout << "Task with Due Date " << dueDate << " not found." << endl;
-        break;
-    }
-    case 2:
-    {
-        string pr;
-        int priority;
-        cout << "Enter Priority (Low, Medium, High): ";
-        cin >> pr;
-        if (pr == "high" || pr == "High")
-        {
-            priority = 1;
-        }
-        if (pr == "medium" || pr == "Medium")
-        {
-            priority = 2;
-        }
-        if (pr == "low" || pr == "Low")
-        {
-            priority = 3;
-        }
-        Task* current = head;
-        while (current != nullptr)
-        {
-            if (current->priority == priority)
-            {
-                cout << "Task Found:" << endl;
-                cout << "ID: " << current->id << endl;
-                cout << "Name: " << current->name << endl;
-                cout << "Description: " << current->description << endl;
-                cout << "Priority: " << current->priority << endl;
-                cout << "Due Date: " << current->dueDate << endl;
-                return;
-            }
-            current = current->next;
-        }
-        cout << "Task with Priority " << priority << " not found." << endl;
-        break;
-    }
-    case 3:
-    {
-        int id;
-        cout << "Enter Task ID: ";
-        cin >> id;
-        Task* current = head;
-        while (current != nullptr)
-        {
-            if (current->id == id)
-            {
-                cout << "Task Found:" << endl;
-                cout << "ID: " << current->id << endl;
-                cout << "Name: " << current->name << endl;
-                cout << "Description: " << current->description << endl;
-                cout << "Priority: " << current->priority << endl;
-                cout << "Due Date: " << current->dueDate << endl;
-                return;
-            }
-            current = current->next;
-        }
-        cout << "Task with ID " << id << " not found." << endl;
-        break;
-    }
-    default:
-        cout << "Invalid choice." << endl;
-        break;
-    }
-}
-void display() {
-
-}
-int main() {
-    Task* head = nullptr;
-    Task* tail = nullptr;
-
-    addTask(head, tail, 1, "Task 1", "Description 1", 1, 241130);
-    addTask(head, tail, 2, "Task 2", "Description 2", 2, 241201);
-    addTask(head, tail, 3, "Task 3", "Description 3", 3, 241225);
-
-    // Displaying the tasks
-    cout << "Tasks in the list (sorted by priority):\n";
     Task* current = head;
-    while (current != nullptr) {
-        cout << "Name: " << current->name << ", Description: " << current->description
-            << ", Priority: " << current->priority << ", Due Date: " << current->dueDate << endl;
+    bool swapped;
+
+    do {
+        swapped = false;
+        current = head;
+
+        while (current->next) {
+            if (current->priority > current->next->priority) {
+                // Swap data
+                swap(current->id, current->next->id);
+                swap(current->name, current->next->name);
+                swap(current->description, current->next->description);
+                swap(current->priority, current->next->priority);
+                swapped = true;
+            }
+            current = current->next;
+        }
+    } while (swapped);
+}
+
+// Function to Edit a Task
+void editTask(int id, string newName, string newDescription, int newPriority) {
+    Task* current = head;
+    while (current) {
+        if (current->id == id) {
+            current->name = newName;
+            current->description = newDescription;
+            current->priority = newPriority;
+            sortTasks(); // Re-sort after editing
+            cout << "Task updated successfully.\n";
+            return;
+        }
         current = current->next;
     }
+    cout << "Task not found.\n";
+}
 
-    search(head);
+// Function to Push a Task to the Undo Stack
+void pushToStack(Task task) {
+    StackNode* newNode = new StackNode{ task, stackTop };
+    stackTop = newNode;
+}
 
+// Function to Pop a Task from the Undo Stack
+Task popFromStack() {
+    if (!stackTop) {
+        cout << "Undo stack is empty.\n";
+        return Task{ -1, "", "", -1, nullptr, nullptr };
+    }
 
+    StackNode* temp = stackTop;
+    Task taskData = stackTop->taskData;
+    stackTop = stackTop->next;
+    delete temp;
+    return taskData;
+}
+
+// Function to Delete a Task
+void deleteTask(int id) {
+    Task* current = head;
+
+    while (current) {
+        if (current->id == id) {
+            // Push deleted task to Undo Stack
+            pushToStack(*current);
+
+            // Remove the node
+            if (current == head && current == tail) {
+                // Only one node in the list
+                head = tail = nullptr;
+            }
+            else if (current == head) {
+                // Deleting head node
+                head = head->next;
+                head->prev = nullptr;
+            }
+            else if (current == tail) {
+                // Deleting tail node
+                tail = tail->prev;
+                tail->next = nullptr;
+            }
+            else {
+                // Deleting middle node
+                current->prev->next = current->next;
+                current->next->prev = current->prev;
+            }
+
+            delete current;
+            cout << "Task deleted successfully.\n";
+            return;
+        }
+        current = current->next;
+    }
+    cout << "Task not found.\n";
+}
+
+// Function to Undo the Last Deletion
+void undoDelete() {
+    Task restoredTask = popFromStack();
+
+    if (restoredTask.id != -1) {
+        addTask(restoredTask.id, restoredTask.name, restoredTask.description, restoredTask.priority);
+        sortTasks(); // Re-sort after restoration
+        cout << "Task restored successfully.\n";
+    }
+}
+
+// Function to Display All Tasks
+void displayTasks() {
+    if (!head) {
+        cout << "No tasks available.\n";
+        return;
+    }
+
+    Task* current = head;
+    cout << "Tasks:\n";
+    while (current) {
+        cout << "ID: " << current->id
+            << ", Name: " << current->name
+            << ", Description: " << current->description
+            << ", Priority: " << current->priority << endl;
+        current = current->next;
+    }
+}
+
+// Main Menu Function
+void menu() {
+    int choice;
+
+    do {
+        cout << "\nTask Manager Menu:\n";
+        cout << "1. Add Task\n";
+        cout << "2. Edit Task\n";
+        cout << "3. Delete Task\n";
+        cout << "4. Undo Last Deletion\n";
+        cout << "5. Display All Tasks\n";
+        cout << "0. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: {
+            int id, priority;
+            string name, description;
+
+            cout << "Enter Task ID: ";
+            cin >> id;
+            cin.ignore(); // Clear newline
+            cout << "Enter Task Name: ";
+            getline(cin, name);
+            cout << "Enter Task Description: ";
+            getline(cin, description);
+            cout << "Enter Task Priority: ";
+            cin >> priority;
+
+            addTask(id, name, description, priority);
+            sortTasks(); // Ensure sorting after addition
+            break;
+        }
+        case 2: {
+            int id, priority;
+            string newName, newDescription;
+
+            cout << "Enter Task ID to Edit: ";
+            cin >> id;
+            cin.ignore(); // Clear newline
+            cout << "Enter New Task Name: ";
+            getline(cin, newName);
+            cout << "Enter New Task Description: ";
+            getline(cin, newDescription);
+            cout << "Enter New Task Priority: ";
+            cin >> priority;
+
+            editTask(id, newName, newDescription, priority);
+            break;
+        }
+        case 3: {
+            int id;
+            cout << "Enter Task ID to Delete: ";
+            cin >> id;
+
+            deleteTask(id);
+            break;
+        }
+        case 4:
+            undoDelete();
+            break;
+        case 5:
+            displayTasks();
+            break;
+        case 0:
+            cout << "Exiting program.\n";
+            break;
+        default:
+            cout << "Invalid choice. Try again.\n";
+        }
+    } while (choice != 0);
+}
+
+// Main Function
+int main() {
+    menu();
+    return 0;
 }
