@@ -44,7 +44,7 @@ void sortTask() {
 
         while (current->next) {
             if (current->priority > current->next->priority) {
-
+                // Swap priorities
                 int tempPriority = current->priority;
                 current->priority = current->next->priority;
                 current->next->priority = tempPriority;
@@ -98,9 +98,12 @@ void search() {
         cout << "Enter Priority (Low, Medium, High): ";
         string pr;
         cin >> pr;
-        if (pr == "high" || pr == "High") priority = 1;
-        else if (pr == "medium" || pr == "Medium") priority = 2;
-        else if (pr == "low" || pr == "Low") priority = 3;
+        if (pr == "high" || pr == "High") 
+            priority = 1;
+        else if (pr == "medium" || pr == "Medium") 
+            priority = 2;
+        else if (pr == "low" || pr == "Low") 
+            priority = 3;
 
         Task* current = head;
         while (current != nullptr) {
@@ -163,6 +166,7 @@ Task popFromStack() {
     delete temp;
     return taskData;
 }
+
 void editTask(Task* head) {
     int id;
     cout << "Enter the ID of the task you want to edit: ";
@@ -265,6 +269,7 @@ void undo() {
         cout << "No task to restore." << endl;
     }
 }
+
 void display(Task* head) {
     cout << "Tasks in the list (sorted by priority):\n";
     Task* current = head;
@@ -277,41 +282,67 @@ void display(Task* head) {
 
 int main() {
     // Add tasks to test adding functionality
-    addTask(1, "Task 1", "Description 1", 1, 241130);
-    addTask(2, "Task 2", "Description 2", 2, 241201);
-    addTask(3, "Task 3", "Description 3", 3, 241225);
+    addTask(1, "Task 1", "Description 1", 2, 230901);
+    addTask(2, "Task 2", "Description 2", 1, 230902);
+    addTask(3, "Task 3", "Description 3", 3, 230903);
 
-    // Display tasks to verify they are added and sorted by priority
-    cout << "\nDisplaying tasks after adding:\n";
-    display(head);
+    int choice;
+    do {
+        cout << "\nTask Management System\n";
+        cout << "1. Add Task\n";
+        cout << "2. Edit Task\n";
+        cout << "3. Delete Task\n";
+        cout << "4. Search Task\n";
+        cout << "5. Undo Last Operation\n";
+        cout << "6. Display Tasks\n";
+        cout << "7. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
 
-    // Test search functionality
-    cout << "\nTesting search functionality:\n";
-    search();
-
-    // Test edit functionality
-    cout << "\nTesting edit functionality:\n";
-    editTask(head);
-
-    // Display tasks after editing to verify changes
-    cout << "\nDisplaying tasks after editing:\n";
-    display(head);
-
-    // Test delete functionality
-    cout << "\nDeleting task with ID 2:\n";
-    deleteTask(2);
-
-    // Display tasks after deletion
-    cout << "\nDisplaying tasks after deleting Task 2:\n";
-    display(head);
-
-    // Test undo functionality (should restore the last deleted task)
-    cout << "\nTesting undo functionality:\n";
-    popFromStack();
-
-    // Display tasks after undo
-    cout << "\nDisplaying tasks after undo:\n";
-    display(head);
+        switch (choice) {
+        case 1: {
+            int id, priority, dueDate;
+            string name, description;
+            cout << "Enter Task ID: ";
+            cin >> id;
+            cin.ignore();
+            cout << "Enter Task Name: ";
+            getline(cin, name);
+            cout << "Enter Task Description: ";
+            getline(cin, description);
+            cout << "Enter Task Priority (1 for High, 2 for Medium, 3 for Low): ";
+            cin >> priority;
+            cout << "Enter Due Date (YYMMDD): ";
+            cin >> dueDate;
+            addTask(id, name, description, priority, dueDate);
+            break;
+        }
+        case 2:
+            editTask(head);
+            break;
+        case 3: {
+            int id;
+            cout << "Enter Task ID to delete: ";
+            cin >> id;
+            deleteTask(id);
+            break;
+        }
+        case 4:
+            search();
+            break;
+        case 5:
+            undo();
+            break;
+        case 6:
+            display(head);
+            break;
+        case 7:
+            cout << "Exiting..." << endl;
+            break;
+        default:
+            cout << "Invalid choice, please try again." << endl;
+        }
+    } while (choice != 7);
 
     return 0;
 }
