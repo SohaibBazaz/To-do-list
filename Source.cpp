@@ -8,6 +8,7 @@ struct Task {
     string description;
     int priority; // 1 (high), 2 (medium), 3 (low)
     int dueDate; // in (YYMMDD)
+    string progress; // "in progress" or "completed"
     Task* prev;
     Task* next;
 
@@ -17,6 +18,7 @@ struct Task {
         this->description = description;
         this->priority = priority;
         this->dueDate = dueDate;
+        this->progress = "in progress"; // Default value
         this->prev = nullptr;
         this->next = nullptr;
     }
@@ -55,17 +57,35 @@ void sortTask() {
     }
 }
 
+bool isIdPresent(int id) {
+    Task* current = head;
+    while (current != nullptr) {
+        if (current->id == id) {
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+
 void addTask(int id, string name, string description, int priority, int dueDate) {
+    if (isIdPresent(id)) {
+        cout << "Error: Task with ID " << id << " already exists." << endl;
+        return;
+    }
     Task* newTask = new Task(id, name, description, priority, dueDate);
-    if (head == nullptr)
+    if (head == nullptr) {
         head = tail = newTask;
+    }
     else {
         tail->next = newTask;
         newTask->prev = tail;
         tail = newTask;
     }
     sortTask();
+
 }
+
 
 void search() {
     int choice;
@@ -86,6 +106,7 @@ void search() {
                 cout << "Description: " << current->description << endl;
                 cout << "Priority: " << current->priority << endl;
                 cout << "Due Date: " << current->dueDate << endl;
+                cout << "Progress: " << current->progress << endl;
                 return;
             }
             current = current->next;
@@ -98,11 +119,11 @@ void search() {
         cout << "Enter Priority (Low, Medium, High): ";
         string pr;
         cin >> pr;
-        if (pr == "high" || pr == "High") 
+        if (pr == "high" || pr == "High")
             priority = 1;
-        else if (pr == "medium" || pr == "Medium") 
+        else if (pr == "medium" || pr == "Medium")
             priority = 2;
-        else if (pr == "low" || pr == "Low") 
+        else if (pr == "low" || pr == "Low")
             priority = 3;
 
         Task* current = head;
@@ -114,6 +135,7 @@ void search() {
                 cout << "Description: " << current->description << endl;
                 cout << "Priority: " << current->priority << endl;
                 cout << "Due Date: " << current->dueDate << endl;
+                cout << "Progress: " << current->progress << endl;
                 return;
             }
             current = current->next;
@@ -134,6 +156,7 @@ void search() {
                 cout << "Description: " << current->description << endl;
                 cout << "Priority: " << current->priority << endl;
                 cout << "Due Date: " << current->dueDate << endl;
+                cout << "Progress: " << current->progress << endl;
                 return;
             }
             current = current->next;
@@ -147,12 +170,10 @@ void search() {
     }
 }
 
-
 void pushToStack(Task task) {
     StackNode* newNode = new StackNode{ task, stackTop };
     stackTop = newNode;
 }
-
 
 Task popFromStack() {
     if (!stackTop) {
@@ -209,6 +230,15 @@ void editTask(Task* head) {
             if (!newDueDate.empty()) {
                 current->dueDate = stoi(newDueDate);
             }
+
+            cout << "Current Progress (in progress, completed): " << current->progress << endl;
+            cout << "Enter new Progress (or press Enter to keep unchanged): ";
+            string newProgress;
+            getline(cin, newProgress);
+            if (!newProgress.empty()) {
+                current->progress = newProgress;
+            }
+
             sortTask();
             cout << "Task updated successfully!" << endl;
             return;
@@ -218,7 +248,6 @@ void editTask(Task* head) {
 
     cout << "Task with ID " << id << " not found." << endl;
 }
-
 
 void deleteTask(int id) {
     Task* current = head;
@@ -257,7 +286,6 @@ void deleteTask(int id) {
     cout << "Task not found." << endl;
 }
 
-
 void undo() {
     Task restoredTask = popFromStack();
 
@@ -275,7 +303,8 @@ void display(Task* head) {
     Task* current = head;
     while (current != nullptr) {
         cout << "ID: " << current->id << ", Name: " << current->name << ", Description: " << current->description
-            << ", Priority: " << current->priority << ", Due Date: " << current->dueDate << endl;
+            << ", Priority: " << current->priority << ", Due Date: " << current->dueDate
+            << ", Progress: " << current->progress << endl;
         current = current->next;
     }
 }
