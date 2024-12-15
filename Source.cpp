@@ -290,7 +290,7 @@ void undo() {
     Task restoredTask = popFromStack();
 
     if (restoredTask.id != -1) {
-        addTask(restoredTask.id, restoredTask.name, restoredTask.description, restoredTask.priority, restoredTask.dueDate);
+        addTask(restoredTask.id, restoredTask.name, restoredTask.description, restoredTask.priority, restoredTask.dueDate,restoredTask.progress);
         cout << "Task restored successfully." << endl;
     }
     else {
