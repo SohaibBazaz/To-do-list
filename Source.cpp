@@ -297,7 +297,18 @@ void undo() {
         cout << "No task to restore." << endl;
     }
 }
-
+void markCompleted(int id) {
+    Task* current = head;
+    while (current) {
+        if (current->id == id) {
+            current->progress = "completed";
+            cout << "Task marked as completed.\n";
+            return;
+        }
+        current = current->next;
+    }
+    cout << "Task not found.\n";
+}
 void display(Task* head) {
     cout << "Tasks in the list (sorted by priority):\n";
     Task* current = head;
@@ -320,11 +331,12 @@ int main() {
         cout << "\nTask Management System\n";
         cout << "1. Add Task\n";
         cout << "2. Edit Task\n";
-        cout << "3. Delete Task\n";
-        cout << "4. Search Task\n";
-        cout << "5. Undo Last Operation\n";
-        cout << "6. Display Tasks\n";
-        cout << "7. Exit\n";
+         cout << "3. Mark Task as Completed\n";
+        cout << "4. Delete Task\n";
+        cout << "5. Search Task\n";
+        cout << "6. Undo Last Operation\n";
+        cout << "7. Display Tasks\n";
+        cout << "8. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -349,23 +361,28 @@ int main() {
         case 2:
             editTask(head);
             break;
-        case 3: {
+        case 3: 
+            cout << "Enter task ID to mark as completed: ";
+            cin >> id;
+            markCompleted(id);
+            break;
+        case 4: {
             int id;
             cout << "Enter Task ID to delete: ";
             cin >> id;
             deleteTask(id);
             break;
         }
-        case 4:
+        case 5:
             search();
             break;
-        case 5:
+        case 6:
             undo();
             break;
-        case 6:
+        case 7:
             display(head);
             break;
-        case 7:
+        case 8:
             cout << "Exiting..." << endl;
             break;
         default:
