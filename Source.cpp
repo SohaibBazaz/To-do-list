@@ -262,7 +262,7 @@ void editTask(Task* head) {
             }
             sortTask();
             cout << "Task updated successfully!" << endl;
-            saveToFile(); // Save changes to file
+            saveToFile(); 
             return;
         }
         current = current->next;
@@ -350,20 +350,20 @@ void loadFromFile() {
         string name, description, progress;
 
 
-        ss >> id;               // Read ID
-        ss.ignore();           // Ignore the comma
-        getline(ss, name, ','); // Read name
-        getline(ss, description, ','); // Read description
-        ss >> priority;        // Read priority
-        ss.ignore();           // Ignore the comma
-        ss >> dueDate;         // Read due date
-        ss.ignore();           // Ignore the comma
-        getline(ss, progress);  // Read progress
+        ss >> id;              
+        ss.ignore();           
+        getline(ss, name, ','); 
+        getline(ss, description, ','); 
+        ss >> priority;      
+        ss.ignore();           
+        ss >> dueDate;         
+        ss.ignore();           
+        getline(ss, progress);  
 
-        // Add the task to the list
+        
         addTask(id, name, description, priority, dueDate);
         Task* lastTask = tail;
-        if (lastTask) lastTask->progress = progress; // Set the progress for the last task
+        if (lastTask) lastTask->progress = progress;
     }
     file.close();
 }
