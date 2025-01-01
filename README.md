@@ -16,7 +16,8 @@ A simple and efficient task management system built in C++ that allows users to 
 - **Color-Coded Console Output**: Enhanced user experience with color-coded terminal output for better visibility.
 
 ### Interface:
-![WhatsApp Image 2025-01-01 at 19 27 48_4599068b](https://github.com/user-attachments/assets/dbeb5490-b1c5-48ec-9ad5-341bb88743bd)
+
+![WhatsApp Image 2025-01-01 at 19 31 23_49948bb9](https://github.com/user-attachments/assets/3682c2f8-9592-44ac-8415-d18327bab5d8)
 
 ### Prerequisites
 
