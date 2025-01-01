@@ -2,10 +2,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-<<<<<<< HEAD
 #include <windows.h>
-=======
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
 
 using namespace std;
 
@@ -41,7 +38,6 @@ Task* head = nullptr;
 Task* tail = nullptr;
 string currentUsername;
 
-<<<<<<< HEAD
 void setColor(int color) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
@@ -65,33 +61,13 @@ void setUsername() {
     setColor(7); // Reset to White
 }
 
-=======
-void setUsername() {
-    cout << "Enter your username: ";
-    getline(cin, currentUsername);
-    ifstream file(currentUsername + ".txt");
-    if (!file.is_open()) {
-        ofstream newFile(currentUsername + ".txt");
-        newFile.close();
-        cout << "New file created for user \"" << currentUsername << "\".\n";
-    }
-    else {
-        cout << "Welcome back, \"" << currentUsername << "\".\n";
-    }
-}
-
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
 void saveToFile() {
     if (currentUsername.empty()) return;
     ofstream file(currentUsername + ".txt");
     if (!file.is_open()) {
-<<<<<<< HEAD
         setColor(12); // Red
         cout << "Error: Could not open file to save data.\n";
         setColor(7); // Reset
-=======
-        cout << "Error: Could not open file to save data.\n";
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
         return;
     }
     Task* current = head;
@@ -121,10 +97,6 @@ void sortTask() {
         }
     }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
 bool isIdPresent(int id) {
     Task* current = head;
     while (current != nullptr) {
@@ -141,7 +113,6 @@ void addTask(int id, string name, string description, int priority, int dueDate)
         cout << "Error: Task with ID " << id << " already exists." << endl;
         return;
     }
-<<<<<<< HEAD
 
     Task* newTask = new Task(id, name, description, priority, dueDate);
 
@@ -172,18 +143,6 @@ void addTask(int id, string name, string description, int priority, int dueDate)
 
 
     cout << "Task added successfully!" << endl;
-=======
-    Task* newTask = new Task(id, name, description, priority, dueDate);
-    if (head == nullptr) {
-        head = tail = newTask;
-    }
-    else {
-        tail->next = newTask;
-        newTask->prev = tail;
-        tail = newTask;
-    }
-    sortTask();
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
     saveToFile();
 }
 
@@ -334,11 +293,7 @@ void editTask(Task* head) {
             }
             sortTask();
             cout << "Task updated successfully!" << endl;
-<<<<<<< HEAD
             saveToFile();
-=======
-            saveToFile(); 
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
             return;
         }
         current = current->next;
@@ -401,7 +356,6 @@ void markCompleted(int id) {
     cout << "Task not found.\n";
 }
 
-<<<<<<< HEAD
 
 void display(Task* head) {
     setColor(13); // Light Purple
@@ -422,15 +376,6 @@ void display(Task* head) {
         cout << "Progress: " << current->progress << "\n";
         setColor(11); // Cyan
         cout << "----------------------------------------------\n";
-=======
-void display(Task* head) {
-    cout << "Tasks in the list (sorted by priority):\n";
-    Task* current = head;
-    while (current != nullptr) {
-        cout << "ID: " << current->id << ", Name: " << current->name << ", Description: " << current->description
-            << ", Priority: " << current->priority << ", Due Date: " << current->dueDate
-            << ", Progress: " << current->progress << endl;
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
         current = current->next;
     }
     setColor(13); // Light Purple
@@ -442,13 +387,9 @@ void loadFromFile() {
     if (currentUsername.empty()) return;
     ifstream file(currentUsername + ".txt");
     if (!file.is_open()) {
-<<<<<<< HEAD
         setColor(14); // Yellow
         cout << "No existing data for user \"" << currentUsername << "\". A new file will be created.\n";
         setColor(7); // Reset
-=======
-        cout << "No existing data for user \"" << currentUsername << "\". A new file will be created.\n";
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
         return;
     }
     string line;
@@ -457,7 +398,6 @@ void loadFromFile() {
         int id, priority, dueDate;
         string name, description, progress;
 
-<<<<<<< HEAD
         ss >> id;
         ss.ignore();
         getline(ss, name, ',');
@@ -468,20 +408,6 @@ void loadFromFile() {
         ss.ignore();
         getline(ss, progress);
 
-=======
-
-        ss >> id;              
-        ss.ignore();           
-        getline(ss, name, ','); 
-        getline(ss, description, ','); 
-        ss >> priority;      
-        ss.ignore();           
-        ss >> dueDate;         
-        ss.ignore();           
-        getline(ss, progress);  
-
-        
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
         addTask(id, name, description, priority, dueDate);
         Task* lastTask = tail;
         if (lastTask) lastTask->progress = progress;
@@ -490,7 +416,6 @@ void loadFromFile() {
 }
 
 int main() {
-<<<<<<< HEAD
     setColor(13); // Light Purple
     cout << "\n\n\n\t\t\t\t---------------------------------\n";
     Sleep(350);
@@ -503,14 +428,11 @@ int main() {
     cout << endl;
     Sleep(350);
 
-=======
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
     setUsername();
     loadFromFile();
 
     int choice;
     do {
-<<<<<<< HEAD
         setColor(11); // Cyan
         cout << "\n\t\t\t\t================== Task Management System ==================\n";
         setColor(7); // White
@@ -527,18 +449,6 @@ int main() {
         cout << "\nEnter your choice: ";
 
         setColor(14); // Yellow
-=======
-        cout << "\nTask Management System\n";
-        cout << "1. Add Task\n";
-        cout << "2. Edit Task\n";
-        cout << "3. Mark Task as Completed\n";
-        cout << "4. Delete Task\n";
-        cout << "5. Search Task\n";
-        cout << "6. Undo Last Operation\n";
-        cout << "7. Display Tasks\n";
-        cout << "8. Exit\n";
-        cout << "Enter your choice: ";
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
         cin >> choice;
         setColor(7); // Reset
 
@@ -546,18 +456,12 @@ int main() {
         case 1: {
             int id, priority, dueDate;
             string name, description;
-<<<<<<< HEAD
             setColor(10); // Green
-=======
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
             cout << "Enter Task ID: ";
             setColor(7); // White
             cin >> id;
             cin.ignore();
-<<<<<<< HEAD
             setColor(10);
-=======
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
             cout << "Enter Task Name: ";
             setColor(7);
             getline(cin, name);
@@ -565,7 +469,6 @@ int main() {
             cout << "Enter Task Description: ";
             setColor(7);
             getline(cin, description);
-<<<<<<< HEAD
             setColor(10);
             cout << "Enter Task Priority (1 for High, 2 for Medium, 3 for Low): ";
             setColor(7);
@@ -573,45 +476,28 @@ int main() {
             setColor(10);
             cout << "Enter Due Date (YYMMDD): ";
             setColor(7);
-=======
-            cout << "Enter Task Priority (1 for High, 2 for Medium, 3 for Low): ";
-            cin >> priority;
-            cout << "Enter Due Date (YYMMDD): ";
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
             cin >> dueDate;
             addTask(id, name, description, priority, dueDate);
             break;
         }
         case 2:
-<<<<<<< HEAD
             //editTask;
-=======
-            editTask;
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
             editTask(head);
             break;
         case 3: {
             int id;
-<<<<<<< HEAD
             setColor(10);
             cout << "Enter task ID to mark as completed: ";
             setColor(7);
-=======
-            cout << "Enter task ID to mark as completed: ";
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
             cin >> id;
             markCompleted(id);
             break;
         }
         case 4: {
             int id;
-<<<<<<< HEAD
             setColor(10);
             cout << "Enter Task ID to delete: ";
             setColor(7);
-=======
-            cout << "Enter Task ID to delete: ";
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
             cin >> id;
             deleteTask(id);
             break;
@@ -626,7 +512,6 @@ int main() {
             display(head);
             break;
         case 8:
-<<<<<<< HEAD
             setColor(12); // Red
             cout << "Exiting...\n";
             setColor(7); // Reset
@@ -638,14 +523,3 @@ int main() {
         }
     } while (choice != 8);
 }
-=======
-            cout << "Exiting..." << endl;
-            break;
-        default:
-            cout << "Invalid choice, please try again." << endl;
-        }
-    } while (choice != 8);
-
-    return 0;
-}
->>>>>>> 6a0e3d1c813fad069d764f508e45330c0e94a2f7
